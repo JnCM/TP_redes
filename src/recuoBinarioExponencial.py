@@ -20,6 +20,8 @@ def backOffExponencial(estacoes, n):
             
             flagColisao = verificaColisao(estacoesParaTransmitir)#Verifica a ocorrência de colisão
             if flagColisao == 0:
+                nColisoes = 0
+                tentativas = 0
                 for e in estacoes:#Realiza a transmissão do quadro da estação
                     if e.getIdEstacao() == estacoesParaTransmitir[0].getIdEstacao():
                         e.setTransmitiu()
@@ -32,15 +34,18 @@ def backOffExponencial(estacoes, n):
                 if tentativas == 6:#Caso chegue no limite de tentativas é retornado erro
                     erro = 1
                     break
+                elif nColisoes < 10:#Incrementa o expoente até 10
+                    nColisoes += 1
                 else:
-                    if nColisoes < 10:#Incrementa o expoente até 10
-                        nColisoes += 1
-                    else:
-                        tentativas += 1
+                    tentativas += 1
                 for e in estacoes:#Trata a colisão gerando o próximo slot para as estações que colidiram
                     for eT in estacoesParaTransmitir:
                         if e.getIdEstacao() == eT.getIdEstacao():
                             e.setSlot(randint(slotAtual+1, slotAtual+int(pow(2, nColisoes))+1))
+            else:
+                nColisoes = 0
+                tentativas = 0
+            
             slotAtual += 1
             estacoesParaTransmitir.clear()
 
