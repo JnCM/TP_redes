@@ -11,6 +11,8 @@ class Estacao:
         self.slot = 1
         #Atributo responsável por indicar se uma estação transmitiu seu quadro
         self.transmitiu = 0
+        #Atributo responsável por indicar o número de colisões sucessivas de uma estação
+        self.nColisoes = 0
     
     #Método que altera o valor do slot de uma estação
     def setSlot(self, novoSlot):
@@ -31,3 +33,11 @@ class Estacao:
     #Método que retorna a flag de transmissão de uma estação
     def getTransmitiu(self):
         return self.transmitiu
+    
+    #Método que retorna o número de colisões sucessivas de uma estação
+    def getNColisoes(self):
+        return self.nColisoes
+    
+    #Método que incrementa o número de colisões sucessivas de uma estação
+    def incrementaColisao(self):
+        self.nColisoes += 1

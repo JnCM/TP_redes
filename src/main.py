@@ -26,17 +26,14 @@ if __name__ == "__main__":
                 slotsPrimeira.append(slotPrimeira)
         elif algoritmo == 3:#Executa Recuo binário exponencial
             nomeAlgoritmo = "Recuo binário exponencial"
+            print("\nAlgoritmo: {}".format(nomeAlgoritmo))
+            print("-----------------------------------------------------------------------------")
             for i in range(33):
-                slotPrimeira, slot = backOffExponencial(inicializa(n), n)
-                if slotPrimeira == 0:
-                    print("------ Simulação {} não encontrou solução! ------".format(i+1))
-                else:
-                    slots.append(slot)
-                    slotsPrimeira.append(slotPrimeira)
+                slotPrimeira, slot, nEstacoes = backOffExponencial(inicializa(n), n)
+                print(" Simulação {}: {} estações transmitiram.".format(i+1, nEstacoes))
+                slots.append(slot)
+                slotsPrimeira.append(slotPrimeira)
+            print("-----------------------------------------------------------------------------")
         
-        print("\nAlgoritmo: {}".format(nomeAlgoritmo))
-        if len(slotsPrimeira) == 0:
-            print("SEM SOLUÇÕES!")
-        else:
-            calculaResultado(slots, slotsPrimeira)
+        calculaResultado(slots, slotsPrimeira)
 

@@ -32,6 +32,8 @@ def menu():
                 n = 40
             elif n == 3:
                 n = 100
+    else:
+        n = 0
     
     if n == 0 or algoritmo == 0:
         return 0, 0

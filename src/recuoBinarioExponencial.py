@@ -4,10 +4,9 @@ from random import randint
 from estacao import Estacao
 from utils import verificaColisao
 
-#Método que simula a execução do algoritmo Slotted Aloha
+#Método que simula a execução do algoritmo Recuo binário exponencial
 def backOffExponencial(estacoes, n):
     slotAtual = transmissoes = flagPrimeira = 0
-    tentativas = nColisoes = erro = 0
     estacoesParaTransmitir = []
 
     while transmissoes < n:
@@ -20,8 +19,6 @@ def backOffExponencial(estacoes, n):
             
             flagColisao = verificaColisao(estacoesParaTransmitir)#Verifica a ocorrência de colisão
             if flagColisao == 0:
-                nColisoes = 0
-                tentativas = 0
                 for e in estacoes:#Realiza a transmissão do quadro da estação
                     if e.getIdEstacao() == estacoesParaTransmitir[0].getIdEstacao():
                         e.setTransmitiu()
@@ -30,27 +27,22 @@ def backOffExponencial(estacoes, n):
                 if flagPrimeira == 0:#Resgata o tempo gasto da primeira estação
                     slotPrimeira = estacoesParaTransmitir[0].getSlot()
                     flagPrimeira = 1
-            elif flagColisao == 1:
-                if tentativas == 6:#Caso chegue no limite de tentativas é retornado erro
-                    erro = 1
-                    break
-                elif nColisoes < 10:#Incrementa o expoente até 10
-                    nColisoes += 1
-                else:
-                    tentativas += 1
-                for e in estacoes:#Trata a colisão gerando o próximo slot para as estações que colidiram
+            elif flagColisao == 1:#Trata a colisão gerando o próximo slot para as estações que colidiram
+                for e in estacoes:
                     for eT in estacoesParaTransmitir:
                         if e.getIdEstacao() == eT.getIdEstacao():
-                            e.setSlot(randint(slotAtual+1, slotAtual+int(pow(2, nColisoes))+1))
-            else:
-                nColisoes = 0
-                tentativas = 0
+                            e.incrementaColisao()#Atualiza o número de colisões de uma estação
+                            if e.getNColisoes() == 16:#Caso o número de colisões chegue no limite de tentativas
+                                n -= 1#A estação desiste de transmitir
+                            elif e.getNColisoes() > 10:#Caso a estação chegue à mais de 10 colisões
+                                espera = randint(0, int(pow(2, 10))-1)#O limite superior do rand é fixado
+                                e.setSlot(slotAtual+1+espera)
+                            else:#Senão a estação continua tendo o range de espera incremental
+                                espera = randint(0, int(pow(2, e.getNColisoes()))-1)
+                                e.setSlot(slotAtual+1+espera)
             
             slotAtual += 1
             estacoesParaTransmitir.clear()
 
-    if erro == 1:
-        return 0, 0
-
     #Retorna o total de slots de tempo gastos e o tempo gasto da primeira estação
-    return slotPrimeira, slotAtual
+    return slotPrimeira, slotAtual, n
