@@ -4,6 +4,7 @@ from menu import menu
 from utils import inicializa, calculaResultado
 from slottedAloha import slottedAloha
 from csmaPPersistente import csmaPPersistente
+from recuoBinarioExponencial import backOffExponencial
 
 if __name__ == "__main__":
     slots = []
@@ -25,8 +26,17 @@ if __name__ == "__main__":
                 slotsPrimeira.append(slotPrimeira)
         elif algoritmo == 3:#Executa Recuo binário exponencial
             nomeAlgoritmo = "Recuo binário exponencial"
-            print("Recuo binário exponencial!")
-
+            for i in range(33):
+                slotPrimeira, slot = backOffExponencial(inicializa(n), n)
+                if slotPrimeira == 0:
+                    print("------ Simulação {} não encontrou solução! ------".format(i+1))
+                else:
+                    slots.append(slot)
+                    slotsPrimeira.append(slotPrimeira)
+        
         print("\nAlgoritmo: {}".format(nomeAlgoritmo))
-        calculaResultado(slots, slotsPrimeira)
+        if len(slotsPrimeira) == 0:
+            print("SEM SOLUÇÕES!")
+        else:
+            calculaResultado(slots, slotsPrimeira)
 

@@ -4,6 +4,7 @@ from random import randint
 from estacao import Estacao
 from utils import verificaColisao
 
+#Método que simula a execução do algoritmo CSMA p-persistente
 def csmaPPersistente(estacoes, n):
     slotAtual = transmissoes = flagPrimeira = 0
     estacoesCandidatas = []
@@ -37,7 +38,7 @@ def csmaPPersistente(estacoes, n):
                         e.setTransmitiu()
                         break
                 transmissoes += 1
-                if flagPrimeira == 0:
+                if flagPrimeira == 0:#Resgata o tempo gasto da primeira estação
                     slotPrimeira = estacoesParaTransmitir[0].getSlot()
                     flagPrimeira = 1
             elif flagColisao == 1:
